@@ -14,7 +14,7 @@ Fork and submit this repository to the academy catalog for Turso Tokyo + Vercel 
 For manual hosting set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN on the server. Existing Neon apps can keep DATABASE_URL.
 Provision additive SQL migrations before deployment. Remote startup never creates tables or seed records.
 The SQL migrations in prisma/migrations are immutable. Do not rewrite an applied migration.
-PUBLIC_DEMO=1 with READ_ONLY=1 makes a public read-only demo; never use these flags with real private student data.
+PUBLIC_DEMO=1 enables anonymous demo access. READ_ONLY=1 keeps it read-only; READ_ONLY=0 enables shared registration and editing with same-origin writes. Public demos must contain fictional data only. Private deployments omit PUBLIC_DEMO and keep APP_PASSWORD.
 
 ## Structure
 

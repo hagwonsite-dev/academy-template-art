@@ -9,12 +9,12 @@ export function createApi(config:AcademyConfig, database:()=>Promise<Database>, 
  const app=new Hono().basePath('/api');
  app.use('*',async(c,next)=>{
   c.header('Cache-Control','private, no-store');c.header('X-Content-Type-Options','nosniff');
-  const access=authorize(Object.fromEntries(c.req.raw.headers),c.req.method,env);
+  const access=authorize(Object.fromEntries(c.req.raw.headers),c.req.method,env,new URL(c.req.url).origin);
   if(access!==200) return new Response(access===503?'App password not configured':'Authentication required',{status:access,headers:{'WWW-Authenticate':'Basic realm="Academy", charset="UTF-8"','Cache-Control':'no-store'}});
   await next();
  });
  app.use('*',bodyLimit({maxSize:32768,onError:c=>c.json({error:'입력 내용이 너무 큽니다'},413)}));
- app.get('/config',c=>c.json({...config,readOnly:env.READ_ONLY==='1'||env.PUBLIC_DEMO==='1'}));
+ app.get('/config',c=>c.json({...config,readOnly:env.READ_ONLY==='1'}));
  app.get('/overview',async c=>c.json(await createReader(config,await database()).overview()));
  const params=(url:URL):ListParams=>({page:Number(url.searchParams.get('page')??1),q:url.searchParams.get('q')??'',status:url.searchParams.get('status')??'',studentId:url.searchParams.get('studentId')??''});
  app.get('/:entity/options',async c=>{
@@ -28,7 +28,7 @@ export function createApi(config:AcademyConfig, database:()=>Promise<Database>, 
   return c.json(await createReader(config,await database()).list(name,params(new URL(c.req.url))));
  });
  app.on(['POST','PATCH'],'/*',async c=>{
-  if(env.READ_ONLY==='1'||env.PUBLIC_DEMO==='1')return c.json({error:'공개 예시는 조회만 가능해요.'},403);
+  if(env.READ_ONLY==='1')return c.json({error:'이 앱은 조회만 가능해요.'},403);
   let body:unknown;
   try{body=await c.req.json();}catch{return c.json({error:'올바른 JSON을 입력하세요'},400);}
   const result=await createApp(config,await database())(new URL(c.req.url).pathname,c.req.method,body,false);

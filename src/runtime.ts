@@ -33,4 +33,4 @@ export const reader=cache(async()=>{
  await requireAccess();
  return createReader(config,await database());
 });
-export const readOnly=()=>process.env.READ_ONLY==='1'||process.env.PUBLIC_DEMO==='1';
+export const readOnly=()=>process.env.READ_ONLY==='1';
