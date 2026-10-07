@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createApp, type Config } from './app.ts';
+import { createApp, type Config } from './operations.ts';
 import { openDatabase } from './database.ts';
 import { authorize } from './access.ts';
 const config: Config=JSON.parse(readFileSync('src/config.json','utf8'));

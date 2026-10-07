@@ -1,0 +1,45 @@
+name: Sample browser verification
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save @playwright/test@1.63.0
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - id: browser
+        run: npx playwright test --config playwright.config.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sample-browser
+          path: |
+            /tmp/onhi-preview
+            /tmp/onhi-playwright-results
+      - name: Publish review evidence
+        if: always()
+        env:
+          BROWSER_RESULT: ${{ steps.browser.outcome }}
+        run: |
+          mkdir -p /tmp/onhi-evidence
+          cp -R /tmp/onhi-preview /tmp/onhi-evidence/screenshots 2>/dev/null || true
+          cp -R /tmp/onhi-playwright-results /tmp/onhi-evidence/results 2>/dev/null || true
+          printf '%s\n' "$BROWSER_RESULT" > /tmp/onhi-evidence/status.txt
+          git checkout --orphan "checks/browser-${GITHUB_SHA}"
+          git rm -r --cached .
+          mkdir -p visual-report
+          cp -R /tmp/onhi-evidence/. visual-report/
+          git add -f visual-report
+          git -c user.name=academy-ci -c user.email=academy-ci@users.noreply.github.com commit -m "Record browser verification"
+          git push origin "checks/browser-${GITHUB_SHA}"
