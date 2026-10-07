@@ -27,3 +27,15 @@ export function parseOptions(value: unknown): OptionsPage {
  });
  return {options,hasMore:value.hasMore};
 }
+
+/** Only serialize values required by an edit/action form across the RSC boundary. */
+export function actionRow(entity: AcademyEntity, row: Row, readOnly: boolean): Row {
+ const result: Row = {id: row.id};
+ if (readOnly) return result;
+ const names = new Set([...(entity.editFields ?? []), ...(entity.actions ?? []).flatMap(action => (action.fields ?? []).map(field => field.name))]);
+ for (const name of names) {
+  if (Object.hasOwn(row, name)) result[name] = row[name];
+  if (Object.hasOwn(row, name + 'Label')) result[name + 'Label'] = row[name + 'Label'];
+ }
+ return result;
+}

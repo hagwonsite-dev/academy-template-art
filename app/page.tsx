@@ -6,7 +6,7 @@ import { EditorProvider } from '../components/editor-context.tsx';
 import { Records } from '../components/records.tsx';
 async function Dashboard(){
  const data=await(await reader()).overview(),entity=config.entities[config.primary]!;
- return <EditorProvider config={config} readOnly={readOnly()}><section className="metrics" aria-label="운영 현황">{data.metrics.map(metric=><div className="metric" key={metric.label}><div className="metric-label">{metric.label}</div><div className="metric-value">{metric.value}<span className="metric-unit">건</span></div></div>)}</section><div className="section-heading"><div><h2>{entity.label}</h2><p className="description">{entity.description}</p></div><Link className="text-button" href={'/'+config.primary}>전체 보기 →</Link></div><Records name={config.primary} entity={entity} rows={data.records.rows}/><div className="quick-note">알림 발송·온라인 결제는 외부 서비스 연결이 필요해요.</div></EditorProvider>;
+ return <EditorProvider config={config} readOnly={readOnly()}><section className="metrics" aria-label="운영 현황">{data.metrics.map(metric=><div className="metric" key={metric.label}><div className="metric-label">{metric.label}</div><div className="metric-value">{metric.value}<span className="metric-unit">건</span></div></div>)}</section><div className="section-heading"><div><h2>{entity.label}</h2><p className="description">{entity.description}</p></div><Link className="text-button" href={'/'+config.primary}>전체 보기 →</Link></div><Records name={config.primary} entity={entity} rows={data.records.rows} readOnly={readOnly()}/><div className="quick-note">알림 발송·온라인 결제는 외부 서비스 연결이 필요해요.</div></EditorProvider>;
 }
 export default function Page(){
  const entity=config.entities[config.primary]!;
