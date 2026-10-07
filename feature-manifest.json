@@ -1,0 +1,27 @@
+{
+  "features": [
+    "Student",
+    "Workshop",
+    "Artwork",
+    "Exhibition",
+    "Notice"
+  ],
+  "entities": [
+    "Student",
+    "Workshop",
+    "Artwork",
+    "Exhibition",
+    "Notice"
+  ],
+  "roles": [
+    "owner",
+    "staff"
+  ],
+  "workflows": [
+    "원생",
+    "워크숍",
+    "작품 포트폴리오",
+    "전시 준비",
+    "공지"
+  ]
+}

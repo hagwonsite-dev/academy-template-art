@@ -1,0 +1,97 @@
+{
+  "Student": [
+    {
+      "id": "student-1",
+      "name": "김하늘",
+      "phone": "010-0000-1001",
+      "guardianName": "김보호",
+      "guardianPhone": "010-0000-2001"
+    },
+    {
+      "id": "student-2",
+      "name": "이서준",
+      "phone": "010-0000-1002",
+      "guardianName": "이보호",
+      "guardianPhone": "010-0000-2002"
+    },
+    {
+      "id": "student-3",
+      "name": "박지우",
+      "phone": "010-0000-1003",
+      "guardianName": "박보호",
+      "guardianPhone": "010-0000-2003"
+    },
+    {
+      "id": "student-4",
+      "name": "최다은",
+      "phone": "010-0000-1004",
+      "guardianName": "최보호",
+      "guardianPhone": "010-0000-2004"
+    }
+  ],
+  "Workshop": [
+    {
+      "id": "workshop-1",
+      "title": "가을 숲 수채화",
+      "date": "2026-10-08",
+      "teacher": "서유리",
+      "materials": "수채 물감, 둥근 붓, 도화지"
+    },
+    {
+      "id": "workshop-2",
+      "title": "나만의 작은 집",
+      "date": "2026-10-10",
+      "teacher": "이도현",
+      "materials": "종이 상자, 색종이, 풀"
+    }
+  ],
+  "Artwork": [
+    {
+      "id": "art-1",
+      "studentId": "student-1",
+      "title": "바람이 머무는 숲",
+      "medium": "수채화",
+      "date": "2026-10-08",
+      "feedback": "따뜻한 색과 차가운 색이 자연스럽게 어울려요.",
+      "imageUrl": null,
+      "status": "ready"
+    },
+    {
+      "id": "art-2",
+      "studentId": "student-2",
+      "title": "꿈꾸는 도시",
+      "medium": "종이 콜라주",
+      "date": "2026-10-08",
+      "feedback": "건물마다 다른 질감을 더해보는 중이에요.",
+      "imageUrl": null,
+      "status": "draft"
+    },
+    {
+      "id": "art-3",
+      "studentId": "student-3",
+      "title": "우리 동네의 오후",
+      "medium": "오일 파스텔",
+      "date": "2026-10-06",
+      "feedback": "일상의 작은 장면을 잘 관찰했어요.",
+      "imageUrl": null,
+      "status": "exhibited"
+    }
+  ],
+  "Exhibition": [
+    {
+      "id": "exhibition-1",
+      "title": "우리들의 가을 전시",
+      "date": "2026-10-24",
+      "venue": "스튜디오 작은 갤러리",
+      "memo": "작품 이름표 만들기, 보호자 초대장 준비, 작품 배치 정하기"
+    }
+  ],
+  "Notice": [
+    {
+      "id": "notice-1",
+      "title": "작품과 함께하는 토요일",
+      "date": "2026-10-08",
+      "content": "10월 24일, 아이들의 작품을 함께 감상해요. 관람 시간은 오전 11시부터 오후 3시까지입니다."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "art-academy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --experimental-strip-types src/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "node scripts.mjs lint",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@libsql/client": "^0.18.0"
+  }
+}

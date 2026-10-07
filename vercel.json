@@ -1,0 +1,11 @@
+{
+  "regions": ["icn1"],
+  "buildCommand": "npm run build",
+  "functions": {
+    "src/server.ts": {
+      "includeFiles": "{public/**,src/config.json}",
+      "maxDuration": 60
+    }
+  },
+  "framework": "node"
+}
