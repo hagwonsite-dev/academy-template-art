@@ -15,11 +15,11 @@ for(const profile of profiles) test(profile.id+' desktop, mobile and writable wo
   const context=await browser.newContext({httpCredentials:{username:'admin',password:'browser-verification-only'},viewport:{width:1440,height:1000}}),page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:4319');await expect(page.locator('h1')).toHaveText(profile.tagline);await expect(page.locator('.metric')).toHaveCount(4);
   await mkdir(join(tmpdir(),'onhi-preview'),{recursive:true});await page.screenshot({path:join(tmpdir(),'onhi-preview',profile.slug+'-desktop.png'),fullPage:true});
-  for(const [id,e]of Object.entries(profile.entities)){await page.locator(`nav a[data-feature="${id}"]`).click();await expect(page.locator('.section-heading h2')).toHaveText(e.label);await expect(page.locator('#content')).toBeVisible();}
+  for(const [id,e]of Object.entries(profile.entities)){await page.locator(`nav a[data-feature="${id}"]`).click();await expect(page.locator('.section-heading h2:visible')).toHaveText(e.label);await expect(page.locator('#content:visible')).toBeVisible();}
   await page.locator('nav a[data-feature="Student"]').click();await page.getByRole('button',{name:'+ 새로 등록'}).click();await page.getByLabel('이름',{exact:true}).fill('브라우저 확인');await page.getByRole('button',{name:'저장하기'}).click();await expect(page.getByRole('cell',{name:'브라우저 확인',exact:true})).toBeVisible();
   await page.getByRole('searchbox').fill('없는이름');await page.getByRole('button',{name:'검색',exact:true}).click();await expect(page.locator('.empty')).toBeVisible();await page.getByRole('searchbox').fill('브라우저');await page.getByRole('button',{name:'검색',exact:true}).click();await expect(page.getByRole('cell',{name:'브라우저 확인',exact:true})).toBeVisible();
   for(const [id,entity] of Object.entries(profile.entities).filter(([,e])=>e.fields.some(f=>f.relation))){
-   await page.locator(`nav a[data-feature="${id}"]`).click();await expect(page.locator('.section-heading h2')).toHaveText(entity.label);await page.getByRole('button',{name:'+ 새로 등록'}).click();await expect(page.locator('#editor')).toBeVisible();
+   await page.locator(`nav a[data-feature="${id}"]`).click();await expect(page.locator('.section-heading h2:visible')).toHaveText(entity.label);await page.getByRole('button',{name:'+ 새로 등록'}).click();await expect(page.locator('#editor')).toBeVisible();
    for(const field of entity.fields.filter(f=>!f.readOnly)){
     const input=page.locator('#form-fields [name="'+field.name+'"]');
     if(field.relation==='Student'){await expect(input.locator('option').filter({hasText:'김하늘'})).toHaveCount(1);await input.selectOption({label:'김하늘'});}
@@ -29,12 +29,12 @@ for(const profile of profiles) test(profile.id+' desktop, mobile and writable wo
     else if(field.type==='time')await input.fill('15:00');
     else if(field.type!=='url')await input.fill('브라우저 '+field.label);
    }
-   await page.getByRole('button',{name:'저장하기'}).click();if(id==='Booking'){await expect(page.locator('#form-error')).toContainText('이미 예약');await page.locator('#form-fields [name="studentId"]').selectOption({label:'브라우저 확인'});await page.getByRole('button',{name:'저장하기'}).click();}await expect(page.locator('#editor')).not.toBeVisible();await expect(page.locator('#content')).toBeVisible();
+   await page.getByRole('button',{name:'저장하기'}).click();if(id==='Booking'){await expect(page.locator('#form-error')).toContainText('이미 예약');await page.locator('#form-fields [name="studentId"]').selectOption({label:'브라우저 확인'});await page.getByRole('button',{name:'저장하기'}).click();}await expect(page.locator('#editor')).not.toBeVisible();await expect(page.locator('#content:visible')).toBeVisible();
   }
   const workflow={music:{entity:'Lesson',text:'브라우저 담당 강사',actions:['출석 완료'],state:'출석 완료'},sports:{entity:'Booking',text:'브라우저 확인',actions:['출석 확인'],state:'출석'},study:{entity:'Task',text:'브라우저 과제',actions:['제출 확인','검토 완료'],state:'검토 완료'},art:{entity:'Artwork',text:'브라우저 작품명',actions:['완성 표시','전시 표시'],state:'전시 중'}}[profile.slug];
-  await page.locator(`nav a[data-feature="${workflow.entity}"]`).click();await expect(page.locator('#content')).toBeVisible();
-  for(const action of workflow.actions){const record=page.locator(profile.slug==='sports'?'tbody tr':'article.record-card').filter({hasText:workflow.text});await record.getByRole('button',{name:action,exact:true}).click();await expect(page.locator('#content')).toBeVisible();await expect(record.getByRole('button',{name:action,exact:true})).toHaveCount(0);}
-  await expect(page.locator(profile.slug==='sports'?'tbody tr':'article.record-card').filter({hasText:workflow.text}).locator('.pill')).toHaveText(workflow.state);
+  await page.locator(`nav a[data-feature="${workflow.entity}"]`).click();await expect(page.locator('#content:visible')).toBeVisible();
+  for(const action of workflow.actions){const record=page.locator(profile.slug==='sports'?'tbody tr':'.record-card').filter({hasText:workflow.text});await record.getByRole('button',{name:action,exact:true}).click();await expect(page.locator('#content:visible')).toBeVisible();await expect(record.getByRole('button',{name:action,exact:true})).toHaveCount(0);}
+  await expect(page.locator(profile.slug==='sports'?'tbody tr':'.record-card').filter({hasText:workflow.text}).locator('.pill')).toHaveText(workflow.state);
   await page.locator('nav a[data-feature="overview"]').click();await page.setViewportSize({width:390,height:844});await expect(page.locator('h1')).toHaveText(profile.tagline);await page.screenshot({path:join(tmpdir(),'onhi-preview',profile.slug+'-mobile.png'),fullPage:true});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);await context.close();
  }finally{if(child&&child.exitCode===null){child.kill('SIGTERM');await new Promise(resolve=>child.once('exit',resolve));}await rm(dir,{recursive:true,force:true});}
 });

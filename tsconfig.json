@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
     "target": "ES2023",
     "lib": [
       "DOM",
@@ -29,6 +34,7 @@
     "app/**/*.ts",
     "app/**/*.tsx",
     "components/**/*.tsx",
+    "lib/**/*.ts",
     "src/**/*.ts",
     "tests/**/*.ts",
     "next.config.ts",

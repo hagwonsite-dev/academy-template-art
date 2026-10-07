@@ -4,7 +4,7 @@
 
 ## Stack and local development
 
-Next.js App Router, React, Hono API routes and strict TypeScript. Requires Node 22.19+.
+Next.js App Router, React, shadcn/ui (official new-york components), Tailwind CSS, Hono API routes and strict TypeScript. Requires Node 22.19+.
 Run npm ci, set APP_PASSWORD, then npm run dev. Open http://127.0.0.1:3100 with admin / your APP_PASSWORD.
 Local SQLite receives fictional demo records. Use npm run build and npm start for production.
 
