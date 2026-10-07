@@ -1,5 +1,8 @@
-node_modules
-dist
+node_modules/
 .env*
-*.sqlite*
-.vercel
+!.env.example
+*.sqlite
+dist/
+
+.next/
+*.tsbuildinfo

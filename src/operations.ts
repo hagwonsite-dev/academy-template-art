@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 export interface Field { name: string; label: string; type: string; required?: boolean; readOnly?: boolean; min?: number; max?: number; relation?: string; options?: { value: string; label: string }[] }
 export interface Action { id: string; label: string; from: string[]; to: string; fields?: Field[] }
 export interface Entity { label: string; description: string; icon: string; layout: string; fields: Field[]; editFields?: string[]; initialStatus?: string; actions?: Action[] }
-export interface Config { id: string; name: string; primary: string; entities: Record<string, Entity>; metrics: {entity: string; label: string; status?: string}[]; [key: string]: unknown }
+export interface Config { timestamps?: boolean; id: string; name: string; primary: string; entities: Record<string, Entity>; metrics: {entity: string; label: string; status?: string}[]; [key: string]: unknown }
 type Value = string | number | null;
 export interface Database { query(sql: string, args?: Value[]): Promise<Record<string, unknown>[]> }
 class InputError extends Error { status: number; constructor(message: string, status=400) { super(message); this.status=status; } }
@@ -59,7 +59,7 @@ export function createApp(config: Config, db: Database) {
                 if(name==='Membership' && String(data.endDate)<String(data.startDate)) throw new InputError('종료일은 시작일 이후여야 합니다');
                 if(name==='Lesson' && !(await db.query('SELECT id FROM Pass WHERE id=? AND studentId=?',[data.passId,data.studentId])).length) throw new InputError('해당 원생의 회차권을 선택하세요');
                 if(entity.initialStatus) data.status=entity.initialStatus;
-                const row={id:randomUUID(),...data}, keys=Object.keys(row);
+                const row={id:randomUUID(),...data,...(config.timestamps?{createdAt:new Date().toISOString()}:{})}, keys=Object.keys(row);
                 let condition=''; const args: Value[]=Object.values(row);
                 if(name==='Booking') {condition=' WHERE (SELECT COUNT(*) FROM Booking WHERE sessionId=? AND status<>?) < (SELECT capacity FROM Session WHERE id=?) AND NOT EXISTS (SELECT 1 FROM Booking WHERE sessionId=? AND studentId=? AND status<>?)';args.push(data.sessionId,'cancelled',data.sessionId,data.sessionId,data.studentId,'cancelled');}
                 const inserted=await db.query(`INSERT INTO ${table} (${keys.map(quote).join(',')}) SELECT ${keys.map(()=>'?').join(',')}${condition} RETURNING *`,args);

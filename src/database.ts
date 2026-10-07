@@ -21,7 +21,7 @@ export async function openDatabase() {
         const sql = neon(uri);
         return {
             query: async (text: string, values: SQLInputValue[] = []): Promise<Record<string, unknown>[]> => {
-                try { return await sql.query(text, values); }
+                try { return await sql.query(text.replace(/\?/g, (() => { let index = 0; return () => '$' + (++index); })()), values); }
                 catch { throw Error('Database request failed'); }
             },
             close: () => {},

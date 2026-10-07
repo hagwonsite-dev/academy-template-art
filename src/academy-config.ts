@@ -1,0 +1,268 @@
+import type { AcademyConfig } from './model.ts';
+export const config: AcademyConfig = {
+  "id": "art-academy",
+  "slug": "art",
+  "name": "팔레트 미술 스튜디오",
+  "englishName": "Art Studio",
+  "category": "arts",
+  "tagline": "각자의 색으로, 세상을 그리는 시간.",
+  "description": "작품 포트폴리오 · 피드백 · 전시 준비를 관리하는 미술학원",
+  "accent": "#b65537",
+  "tint": "#fcf0e9",
+  "eyebrow": "EVERY CHILD, A DIFFERENT COLOR",
+  "primary": "Artwork",
+  "metrics": [
+    {
+      "entity": "Student",
+      "label": "작은 예술가"
+    },
+    {
+      "entity": "Artwork",
+      "label": "제작 중 작품",
+      "status": "draft"
+    },
+    {
+      "entity": "Artwork",
+      "label": "완성된 작품",
+      "status": "ready"
+    },
+    {
+      "entity": "Artwork",
+      "label": "전시 작품",
+      "status": "exhibited"
+    }
+  ],
+  "entities": {
+    "Student": {
+      "label": "원생",
+      "description": "원생과 보호자의 연락처를 한곳에서 관리해요.",
+      "icon": "○",
+      "layout": "table",
+      "fields": [
+        {
+          "name": "name",
+          "label": "이름",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "phone",
+          "label": "연락처",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "guardianName",
+          "label": "보호자",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "guardianPhone",
+          "label": "보호자 연락처",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "editFields": [
+        "name",
+        "phone",
+        "guardianName",
+        "guardianPhone"
+      ]
+    },
+    "Workshop": {
+      "label": "워크숍",
+      "description": "재료와 주제를 정하고 함께 만드는 수업을 계획해요.",
+      "icon": "◒",
+      "layout": "schedule",
+      "fields": [
+        {
+          "name": "title",
+          "label": "워크숍",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "수업일",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "teacher",
+          "label": "담당 선생님",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "materials",
+          "label": "준비 재료",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "Artwork": {
+      "label": "작품 포트폴리오",
+      "description": "작품의 과정과 완성, 선생님의 피드백을 차곡차곡 모아요.",
+      "icon": "◇",
+      "layout": "gallery",
+      "fields": [
+        {
+          "name": "studentId",
+          "label": "작가",
+          "type": "text",
+          "required": true,
+          "relation": "Student"
+        },
+        {
+          "name": "title",
+          "label": "작품명",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "medium",
+          "label": "재료 · 기법",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "제작일",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "imageUrl",
+          "label": "작품 이미지 URL (HTTPS)",
+          "type": "url"
+        },
+        {
+          "name": "feedback",
+          "label": "작품 피드백",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "상태",
+          "type": "select",
+          "readOnly": true,
+          "options": [
+            {
+              "value": "draft",
+              "label": "제작 중"
+            },
+            {
+              "value": "ready",
+              "label": "완성"
+            },
+            {
+              "value": "exhibited",
+              "label": "전시 중"
+            }
+          ]
+        }
+      ],
+      "initialStatus": "draft",
+      "editFields": [
+        "studentId",
+        "title",
+        "medium",
+        "date",
+        "imageUrl",
+        "feedback"
+      ],
+      "actions": [
+        {
+          "id": "ready",
+          "label": "완성 표시",
+          "from": [
+            "draft"
+          ],
+          "to": "ready"
+        },
+        {
+          "id": "exhibit",
+          "label": "전시 표시",
+          "from": [
+            "ready"
+          ],
+          "to": "exhibited"
+        }
+      ]
+    },
+    "Exhibition": {
+      "label": "전시 준비",
+      "description": "전시 일정과 장소, 준비할 일을 함께 기록해요.",
+      "icon": "▧",
+      "layout": "cards",
+      "fields": [
+        {
+          "name": "title",
+          "label": "전시명",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "전시일",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "venue",
+          "label": "장소",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "memo",
+          "label": "준비 메모",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "editFields": [
+        "title",
+        "date",
+        "venue",
+        "memo"
+      ]
+    },
+    "Notice": {
+      "label": "공지",
+      "description": "학부모에게 전달할 내용을 정리해요. 실제 알림은 발송되지 않아요.",
+      "icon": "↗",
+      "layout": "cards",
+      "fields": [
+        {
+          "name": "title",
+          "label": "제목",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "게시일",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "content",
+          "label": "내용",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "editFields": [
+        "title",
+        "date",
+        "content"
+      ]
+    }
+  },
+  "timestamps": true
+};

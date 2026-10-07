@@ -1,0 +1,10 @@
+import { handle } from '@hono/vercel';
+import { createApi } from '../../../src/http.ts';
+import { config } from '../../../src/academy-config.ts';
+import { database } from '../../../src/runtime.ts';
+export const runtime='nodejs';
+export const dynamic='force-dynamic';
+const api=createApi(config,database);
+export const GET=handle(api);
+export const POST=handle(api);
+export const PATCH=handle(api);
